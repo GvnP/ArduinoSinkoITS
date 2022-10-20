@@ -1,4 +1,4 @@
-#include <LiquidCrystal_I2C.h //Penambahan Library Liquid Crystal_I2C
+#include <LiquidCrystal_I2C.h>//Penambahan Library Liquid Crystal_I2C
 LiquidCrystal_I2C lcd(0x27, 20, 4); //Setting jenis I2C (Angka 20, 4 berarti sekarang LCD yang digunakan memiliki 4 baris dan 20 kolom karakter)
 #include <SPI.h> //Penambahan Library SPI untuk penghubungan ESP32 dengan Ethernet
 #include <Ethernet.h> //Penambahan Library Ethernet untuk setting syntax penghubung ke ethernet
@@ -9,7 +9,6 @@ IPAddress ip(192, 168, 13, 167); //IP address mikrokontroler pengirim ( 3 IP per
 EthernetClient client; //Inisialisasi client Ethernet (Ini adalah syntax bawaan)
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED }; //Setting MAC Address ( Tidak perlu dirubah - rubah )
 
-
 const int trigPin = 4; //Menginisiasi pin  mikrokontroler sebagai trigger sensor ultrasonik yang ada di loker
 const int echoPin = 5; //Menginisiasi pin mikrokontroler sebagai echo (penerima/receiver) untuk sensor ultrasonik yang ada di loker
 const int trigPin2 = 6; //Menginisiasi pin  mikrokontroler sebagai trigger sensor ultrasonik yang ada di area parkir
@@ -17,9 +16,7 @@ const int echoPin2 = 7; //Menginisiasi pin mikrokontroler sebagai echo (penerima
 const int ledPin = 21; //Menginisiasi pin mikrokontroler sebagai pengirim sinyal kepada buzzer jika tandon E7 habis
 const int ledPin2 = 26; //Menginisiasi pin mikrokontroler sebagai pengirim sinyal kepada buzzer jika tandon loker habis
 
-
 #define SOUND_SPEED 0.034 //Pendefinisian kecepatan suara menjadi 0.034 cm/uS (Centimeter / Mikro Second)
-
 
 long duration; //Pendefinisian durasi dalam bentuk format long sebagai regulasi sensor yang ada di tandon E7
 long duration2; // Pendefinisian durasi dalam bentuk format long sebagai regulasi sensor yang ada di tandon loker
@@ -33,7 +30,7 @@ unsigned long lastTimeConditionWasFalse2; //Pendefinisian kondisi lama sebagai r
 void setup() { //Fungsi yang hanya dilakukan sekali saja ( syntax dasar dari pemrograman arduino )
   //setup pin dan lcd
     Serial.begin(115200); //Menghubungkan LCD ke mikrokontroler ESP (Jika menggunakan esp)
-  lcd.init();                      // initialize the lcd 
+  lcd.begin(); // initialize the lcd 
   lcd.backlight(); //Memberikan backlight pada LCD
   Ethernet.init(33); //Menginisialisasi pin esp32 yang akan digunakan sebagai pin CS pada modul ethernet W5500
   Ethernet.begin(mac, ip); //Menghubungkan mikrokontroler ke alamat ip dan mac yang sudah disetting
@@ -84,12 +81,12 @@ void loop() { //Fungsi yang akan dilakukan terus menerus berulang - ulang
 lcd.setCursor(0,0); //Memposisikan karakter ditulis dari baris pertama dan kolom pertama
 lcd.print ("Tandon E7 = "); //Tempat menuliskan karakter
 lcd.print(ketinggian1); //Karakter berisi ketinggian air yang berada pada tandon E7
-lcd.print(" CM    "); //Tempat menuliskan karakter
+lcd.print("CM    "); //Tempat menuliskan karakter
 
 lcd.setCursor(0,1); //Memposisikan karakter ditulis dari baris kedua dan kolom pertama
 lcd.print ("Loker     = "); //Tempat menuliskan karakter
 lcd.print(ketinggian2); //Karakter berisi ketinggian air yang berada pada tandon loker
-lcd.print(" CM    "); //Tempat menuliskan karakter
+lcd.print("CM    "); //Tempat menuliskan karakter
 
 //Pembacaan 1
   if (ketinggian1 > 40.00) { //Membuat kondisi jika ketinggian air yang berada di tandon E7 lebih dari 40.00 cm
@@ -110,7 +107,7 @@ if (millis() - lastTimeConditionWasFalse >= 5000) { //jika timer kondisi 'air ma
 
 
 //Pembacaan 2
-if ( ketinggian2 < 40.00) { //Membuat kondisi jika ketinggian air yang berada di tandon loker lebih dari 40.00 cm
+if ( ketinggian2 > 40.00) { //Membuat kondisi jika ketinggian air yang berada di tandon loker lebih dari 40.00 cm
    lastTimeConditionWasFalse2 = millis(); //Maka timer kondisi 'air masih banyak' akan menyala
 }
 
